@@ -34,7 +34,9 @@ My.writeln("abc");
 setTimeout("My.writeln(1)",1000);
 setTimeout("My.writeln(2)",2000);
 setTimeout("My.writeln(3)",3000);
+let c = [3,8,5,9,2];
+for (let i = 0; i<5; i++)
+setTimeout("My.writeln(c["+ i +"])",(i+1)*2000);
 function fn(){My.writeln('A');}
 handle = setInterval(fn,2000);
-
 </script>
