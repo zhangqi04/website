@@ -1,24 +1,214 @@
-<html>
-<script>
-N=0;
-function move(n,source,destination,temp)
-{
-	if(n==1)
-	{
-		N++;
-		document.writeln("move"+"from"+source+"to"+destination+"<br>");
-		console.log("move"+"from"+source+"to"+destination);
-	}
-	else
-	{
-	move(n-1,source,temp,destination);
-	move(1,source,destination,temp);
-	move(n-1,temp,destination,source);
-	}
-}
+<!DOCTYPE html>
+<html lang="en">
 
-move(7,1,2,3);//move 7 disks from 1 to 3 using 2 as temp storage
-document.writeln("times of moving="+N);
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .wrap {
+      position: relative;
+      width: 1200px;
+      height: 500px;
+      margin: 100px auto;
+      border-bottom: 10px solid black;
+    }
 
-</script>
+    .col-1,
+    .col-2,
+    .col-3 {
+      position: absolute;
+      height: 100%;
+      width: 18px;
+      border-top-left-radius: 9px;
+      border-top-right-radius: 9px;
+      background-color: #855E42;
+    }
+
+    .col-1 {
+      left: 16.5%;
+      transform: translateX(-50%);
+    }
+
+    .col-2 {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .col-3 {
+      left: 82.5%;
+      transform: translateX(-50%);
+    }
+
+    .wrap .item {
+      position: absolute;
+      left: 16.5%;
+      top: 0px;
+      transform: translateX(-50%);
+      text-align: center;
+      color: #fff;
+    }
+
+    .menu {
+      top: -80px;
+      position: absolute;
+      height: 50px;
+      width: 100%;
+      bottom: -60px;
+    }
+
+    .menu .start .pause .resume,
+    .menu input {
+      height: 70%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="col-1"></div>
+    <div class="col-2"></div>
+    <div class="col-3"></div>
+    <div class="menu">
+      <button class="start">Start</button>
+      <button class="pause">Pause</button>
+      <button class="resume">Resume</button>
+      <div>
+        <label for="diskNumber">Number of disk：</label>
+        <select id="diskNumber">
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+        </select>
+      </div>
+      <div>
+        <label for="moveSpeed">Time period：</label>
+        <select id="moveSpeed">
+          <option value="1000">1000</option>
+          <option value="750">750</option>
+          <option value="500">500</option>
+          <option value="250">250</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let btn = document.querySelector('.start');
+    let btn_pause = document.querySelector('.pause');
+    let btn_resume = document.querySelector('.resume');
+    let wrap = document.querySelector('.wrap');
+    let col = document.querySelector('.col-1');
+    let wrapHeight = wrap.clientHeight;
+    let wrapWidth = wrap.clientWidth;
+    let colWidth = col.clientWidth;
+    let maxH = 300;
+    let H = 25; 
+    let minW = colWidth + 10; 
+    let W = wrapWidth * 0.33 - 30 * 2;
+    let colPos = [ wrapWidth * 0.165, wrapWidth * 0.5, wrapWidth * 0.825 ];
+
+    let num = 3;
+    let runTime = 300;
+    let items = 0;
+    let nums = [];
+    let tiems = 0;
+    let RATIO = 0.3;
+    function Init() {
+      let existingItems = document.querySelectorAll('.item');
+      existingItems.forEach(item => item.remove());
+      num = parseInt(document.getElementById('diskNumber').value); 
+      runTime = parseInt(document.getElementById('moveSpeed').value);
+      nums = [ num, 0, 0 ]; 
+      let dtW = (W - minW) / num; 
+      let nowCount = num - 1; 
+      let rbg = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f' ];
+      for (let i = 1; i <= num; i++) {
+        let div = document.createElement('div');
+
+        let color = '#';
+        for (let j = 0; j < 6; j++) {
+          color += rbg[ Math.floor(Math.random() * 16) ]; 
+        }
+        let w1 = W - nowCount * dtW
+        let h1 = w1 * RATIO
+        let div1 = document.createElement('div')
+        div1.innerHTML = '<div style="width:' + w1 + 'px; height:' + H + 'px; background-color:' + color + '"></div>'
+          + '<div style="margin: -' + h1 / 2 + 'px 0px -' + (h1 + H) + 'px 0px; width:' + w1 + 'px; height:' + h1 + 'px; background-color:' + color + '; border-radius:' + (w1 / 2) + 'px/' + h1 / 2 + 'px"></div>'
+          + '<div style="width:' + (w1 - 2) + 'px; height:' + h1 + 'px; background-image: radial-gradient(#101010, #305020, 15%, yellow, ' + color + '); border-radius: ' + (w1 / 2 - 1) + 'px/' + h1 / 2 + 'px; border: 1px red solid;"></div>';
+        div1.style.zIndex = 10000 + i
+        div.classList.add('item');
+        div.style.height = H + 'px';
+        div.style.width = W - nowCount * dtW + 'px';
+        div.style.top = wrapHeight - (nowCount + 1) * H + 'px';
+        div.style.zIndex = 100000 - i
+        div.style.transition = 'all ' + runTime + 'ms';
+        div.append(div1)
+        wrap.appendChild(div);
+        nowCount--;
+      }
+      items = document.querySelectorAll('.item');
+      tiems = 0; 
+    }
+    let timeouts = []; 
+
+
+    function move(n, a, b, c) {
+      let topTarget = parseInt(items[ n ].style.top);
+      let numOfCol = nums[ c ];
+      let timeout1 = setTimeout(function () { 
+        items[ n ].style.top = '0px';
+      }, tiems * runTime);
+      timeouts.push(timeout1); 
+      tiems++;
+
+      let timeout2 = setTimeout(function () { 
+        items[ n ].style.left = colPos[ c ] + 'px';
+      }, tiems * runTime);
+      timeouts.push(timeout2); 
+      tiems++;
+
+      let timeout3 = setTimeout(function () { 
+        items[ n ].style.top = wrapHeight - (numOfCol + 1) * H + 'px';
+      }, tiems * runTime);
+      timeouts.push(timeout3); 
+      tiems++;
+
+      nums[ a ]--;
+      nums[ c ]++;
+    }
+
+    function hanoi(n, a, b, c) {
+      if (n === 0) {
+        move(n, a, b, c);
+      } else {
+        hanoi(n - 1, a, c, b);
+        move(n, a, b, c);
+        hanoi(n - 1, b, a, c);
+      }
+    }
+
+    btn.addEventListener('click', function (e) {
+      Init();
+      hanoi(num - 1, 0, 1, 2);
+    });
+
+    btn_pause.addEventListener('click', function (e) {
+      timeouts.forEach(timeout => clearTimeout(timeout));
+    });
+
+    btn_resume.addEventListener('click', function (e) {
+      timeouts.forEach(timeout => clearTimeout(timeout));
+      timeouts = []; 
+      tiems = 0; 
+      hanoi(num - 1, 0, 1, 2);
+    });
+  </script>
+</body>
+
 </html>
