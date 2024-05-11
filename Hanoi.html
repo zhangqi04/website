@@ -135,20 +135,20 @@
         for (let j = 0; j < 6; j++) {
           color += rbg[ Math.floor(Math.random() * 16) ]; 
         }
-        let w1 = W - nowCount * dtW
-        let h1 = w1 * RATIO
-        let div1 = document.createElement('div')
-        div1.innerHTML = '<div style="width:' + w1 + 'px; height:' + H + 'px; background-color:' + color + '"></div>'
-          + '<div style="margin: -' + h1 / 2 + 'px 0px -' + (h1 + H) + 'px 0px; width:' + w1 + 'px; height:' + h1 + 'px; background-color:' + color + '; border-radius:' + (w1 / 2) + 'px/' + h1 / 2 + 'px"></div>'
-          + '<div style="width:' + (w1 - 2) + 'px; height:' + h1 + 'px; background-image: radial-gradient(#101010, #305020, 15%, yellow, ' + color + '); border-radius: ' + (w1 / 2 - 1) + 'px/' + h1 / 2 + 'px; border: 1px red solid;"></div>';
-        div1.style.zIndex = 10000 + i
+        let w1 = W - nowCount * dtW;
+        let h1 = w1 * RATIO;
+        let div1 = document.createElement('div');
+        div1.innerHTML = '<div style="width:' + w1 + 'px; height:' + H + 'px; background-color:' + color + ';overflow:hidden;"></div>'
+          + '<div style="margin: -' + h1 / 2 + 'px 0px -' + (h1 + H) + 'px 0px; width:' + w1 + 'px; height:' + h1 + 'px; background-color:' + color + '; border-radius:' + (w1 / 2) + 'px/' + h1 / 2 + 'px;overflow:hidden;"></div>'
+          + '<div style="width:' + (w1 - 2) + 'px; height:' + h1 + 'px; background-image: radial-gradient(#101010, #305020, 15%, yellow, ' + color + '); border-radius: ' + (w1 / 2 - 1) + 'px/' + h1 / 2 + 'px; border: 1px red solid;overflow:hidden;"></div>';
+        div1.style.zIndex = 10000 + i;
         div.classList.add('item');
         div.style.height = H + 'px';
         div.style.width = W - nowCount * dtW + 'px';
         div.style.top = wrapHeight - (nowCount + 1) * H + 'px';
-        div.style.zIndex = 100000 - i
+        div.style.zIndex = 100000 - i;
         div.style.transition = 'all ' + runTime + 'ms';
-        div.append(div1)
+        div.append(div1);
         wrap.appendChild(div);
         nowCount--;
       }
